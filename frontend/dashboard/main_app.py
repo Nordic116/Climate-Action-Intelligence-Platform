@@ -210,11 +210,11 @@ def display_action_plan(rag_system, user_profile, demo_mode=False):
                                 for i, source in enumerate(sources[:3]):
                                     st.write(f"**Source {i+1}:** {source['metadata'].get('title', 'Climate Data')}")
                                     st.write(f"*Category:* {source['metadata'].get('category', 'General')}")
-                                st.write(f"*Relevance:* {source['similarity']:.2%}")
-                                st.write("---")
-                
-                except Exception as e:
-                    st.error(f"Error generating action plan: {e}")
+                                    st.write(f"*Relevance:* {source['similarity']:.2%}")
+                                    st.write("---")
+                    
+                    except Exception as e:
+                        st.error(f"Error generating action plan: {e}")
     
     with col2:
         st.markdown("### 💡 Quick Tips")
