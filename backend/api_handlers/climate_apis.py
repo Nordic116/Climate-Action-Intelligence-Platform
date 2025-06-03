@@ -413,12 +413,17 @@ class ClimateAPIHandler:
             if 'error' in nasa_data:
                 return nasa_data
             
-            # Calculate averages
-            solar_values = list(nasa_data['solar_irradiance'].values())
-            wind_values = list(nasa_data['wind_speed'].values())
+            # Calculate averages, filtering out NASA missing data indicators (-999)
+            solar_values = [v for v in nasa_data['solar_irradiance'].values() if v > -900]
+            wind_values = [v for v in nasa_data['wind_speed'].values() if v > -900]
             
-            avg_solar = sum(solar_values) / len(solar_values) if solar_values else 0
-            avg_wind = sum(wind_values) / len(wind_values) if wind_values else 0
+            if solar_values and wind_values:
+                avg_solar = sum(solar_values) / len(solar_values)
+                avg_wind = sum(wind_values) / len(wind_values)
+            else:
+                # Use fallback estimates if no valid data
+                avg_solar = 4.5  # Reasonable global average
+                avg_wind = 5.2   # Reasonable global average
             
             # Simple potential calculations
             solar_potential = "High" if avg_solar > 5 else "Medium" if avg_solar > 3 else "Low"
@@ -457,3 +462,126 @@ class ClimateAPIHandler:
             recommendations.append("Look into community renewable energy programs")
         
         return recommendations
+    
+    def get_world_bank_data(self, country: str, indicator: str, year: Optional[int] = None) -> Dict[str, Any]:
+        """Get World Bank climate and economic indicators"""
+        try:
+            # World Bank API endpoint
+            if year:
+                url = f"{settings.WORLD_BANK_API_BASE}/country/{country}/indicator/{indicator}"
+                params = {'date': str(year), 'format': 'json'}
+            else:
+                url = f"{settings.WORLD_BANK_API_BASE}/country/{country}/indicator/{indicator}"
+                params = {'date': '2020:2023', 'format': 'json'}  # Last few years
+            
+            response = self.session.get(url, params=params)
+            response.raise_for_status()
+            
+            data = response.json()
+            
+            # World Bank API returns array with metadata and data
+            if len(data) > 1 and data[1]:
+                latest_data = data[1][0] if data[1] else None
+                if latest_data and latest_data.get('value'):
+                    return {
+                        'country': country,
+                        'indicator': indicator,
+                        'value': latest_data['value'],
+                        'year': latest_data['date'],
+                        'country_name': latest_data.get('country', {}).get('value', country),
+                        'indicator_name': latest_data.get('indicator', {}).get('value', indicator),
+                        'data_source': 'world_bank'
+                    }
+            
+            # Fallback data for common indicators
+            fallback_data = self._get_world_bank_fallback(country, indicator)
+            return fallback_data
+            
+        except Exception as e:
+            logger.error(f"Error fetching World Bank data: {e}")
+            return self._get_world_bank_fallback(country, indicator)
+    
+    def _get_world_bank_fallback(self, country: str, indicator: str) -> Dict[str, Any]:
+        """Provide fallback World Bank data"""
+        fallback_values = {
+            'EN.ATM.CO2E.PC': {  # CO2 emissions per capita
+                'USA': 14.24, 'CHN': 7.38, 'DEU': 8.52, 'JPN': 8.65,
+                'IND': 1.91, 'RUS': 11.45, 'GBR': 5.55, 'FRA': 4.27
+            },
+            'EG.USE.ELEC.KH.PC': {  # Electric power consumption per capita
+                'USA': 12154, 'CHN': 4475, 'DEU': 6602, 'JPN': 7820,
+                'IND': 805, 'RUS': 6603, 'GBR': 4967, 'FRA': 7245
+            }
+        }
+        
+        value = fallback_values.get(indicator, {}).get(country, 0)
+        
+        return {
+            'country': country,
+            'indicator': indicator,
+            'value': value,
+            'year': '2022',
+            'data_source': 'fallback_estimate',
+            'note': 'Estimated value - API unavailable'
+        }
+    
+    def get_un_sdg_data(self, goal: Optional[int] = None, target: Optional[str] = None) -> Dict[str, Any]:
+        """Get UN Sustainable Development Goals data"""
+        try:
+            # UN SDG API endpoint
+            if goal:
+                url = f"{settings.UN_SDG_API_BASE}/Goal/{goal}/Target"
+            else:
+                url = f"{settings.UN_SDG_API_BASE}/Goal"
+            
+            response = self.session.get(url)
+            response.raise_for_status()
+            
+            data = response.json()
+            
+            # Process climate-related SDGs
+            climate_goals = []
+            if isinstance(data, list):
+                for item in data:
+                    if any(keyword in str(item).lower() for keyword in ['climate', 'energy', 'environment', 'carbon']):
+                        climate_goals.append(item)
+            
+            return {
+                'climate_related_goals': climate_goals[:10],  # Limit response
+                'total_goals': len(data) if isinstance(data, list) else 1,
+                'data_source': 'un_sdg_api'
+            }
+            
+        except Exception as e:
+            logger.error(f"Error fetching UN SDG data: {e}")
+            return self._get_un_sdg_fallback()
+    
+    def _get_un_sdg_fallback(self) -> Dict[str, Any]:
+        """Provide fallback UN SDG data"""
+        return {
+            'climate_related_goals': [
+                {
+                    'goal': 7,
+                    'title': 'Affordable and Clean Energy',
+                    'description': 'Ensure access to affordable, reliable, sustainable and modern energy for all'
+                },
+                {
+                    'goal': 13,
+                    'title': 'Climate Action',
+                    'description': 'Take urgent action to combat climate change and its impacts'
+                },
+                {
+                    'goal': 14,
+                    'title': 'Life Below Water',
+                    'description': 'Conserve and sustainably use the oceans, seas and marine resources'
+                },
+                {
+                    'goal': 15,
+                    'title': 'Life on Land',
+                    'description': 'Protect, restore and promote sustainable use of terrestrial ecosystems'
+                }
+            ],
+            'total_goals': 17,
+            'data_source': 'fallback_data',
+            'note': 'Static SDG data - API unavailable'
+        }

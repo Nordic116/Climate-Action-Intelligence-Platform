@@ -1,0 +1,274 @@
+{
+  "timestamp": "2025-06-03T06:00:52.966583",
+  "api_status": {
+    "OpenWeather": {
+      "status": "working",
+      "response_time": 0.21,
+      "data_quality": "High",
+      "reliability": "High",
+      "transparency": "High",
+      "details": {
+        "cities_tested": 4,
+        "successful_requests": 4,
+        "success_rate": "100.0%",
+        "sample_data": {
+          "location": "San Francisco",
+          "country": "US",
+          "temperature": 13.17,
+          "humidity": 85,
+          "pressure": 1015,
+          "weather": "few clouds",
+          "wind_speed": 5.66,
+          "coordinates": {
+            "lat": 37.7749,
+            "lon": -122.4194
+          }
+        }
+      },
+      "issues": []
+    },
+    "Carbon Interface": {
+      "status": "working",
+      "response_time": 0.63,
+      "data_quality": "Medium",
+      "reliability": "High",
+      "transparency": "High",
+      "details": {
+        "activities_tested": 3,
+        "successful_calculations": 2,
+        "success_rate": "66.7%",
+        "sample_calculation": {
+          "carbon_kg": 40.33,
+          "carbon_lb": 88.9,
+          "carbon_mt": 0.04,
+          "activity_type": "electricity",
+          "activity_data": {
+            "kwh": 100,
+            "country": "us"
+          }
+        }
+      },
+      "issues": [
+        "Failed to calculate carbon footprint for flight"
+      ]
+    },
+    "NASA POWER": {
+      "status": "error",
+      "response_time": 0.0,
+      "data_quality": "Medium",
+      "reliability": "High",
+      "transparency": "High",
+      "details": {
+        "locations_tested": 4,
+        "successful_requests": 0,
+        "success_rate": "0.0%",
+        "sample_data": null
+      },
+      "issues": [
+        "Error with location (37.7749, -122.4194): ClimateAPIHandler.get_renewable_energy_potential() takes 2 positional arguments but 3 were given",
+        "Error with location (40.7128, -74.006): ClimateAPIHandler.get_renewable_energy_potential() takes 2 positional arguments but 3 were given",
+        "Error with location (51.5074, -0.1278): ClimateAPIHandler.get_renewable_energy_potential() takes 2 positional arguments but 3 were given",
+        "Error with location (35.6762, 139.6503): ClimateAPIHandler.get_renewable_energy_potential() takes 2 positional arguments but 3 were given"
+      ]
+    },
+    "Climate TRACE": {
+      "status": "working",
+      "response_time": 0.8,
+      "data_quality": "Medium",
+      "reliability": "Medium",
+      "transparency": "High",
+      "details": {
+        "endpoints_tested": 3,
+        "successful_endpoints": 3,
+        "success_rate": "100.0%",
+        "available_data": [
+          "sectors",
+          "countries",
+          "emissions"
+        ]
+      },
+      "issues": []
+    },
+    "World Bank": {
+      "status": "error",
+      "response_time": 0.0,
+      "data_quality": "Medium",
+      "reliability": "High",
+      "transparency": "High",
+      "details": {
+        "countries_tested": 4,
+        "indicators_tested": 2,
+        "successful_requests": 0,
+        "success_rate": "0.0%",
+        "sample_data": null
+      },
+      "issues": [
+        "Error with USA - EN.ATM.CO2E.PC: 'ClimateAPIHandler' object has no attribute 'get_world_bank_data'",
+        "Error with USA - EG.USE.ELEC.KH.PC: 'ClimateAPIHandler' object has no attribute 'get_world_bank_data'",
+        "Error with CHN - EN.ATM.CO2E.PC: 'ClimateAPIHandler' object has no attribute 'get_world_bank_data'",
+        "Error with CHN - EG.USE.ELEC.KH.PC: 'ClimateAPIHandler' object has no attribute 'get_world_bank_data'",
+        "Error with DEU - EN.ATM.CO2E.PC: 'ClimateAPIHandler' object has no attribute 'get_world_bank_data'",
+        "Error with DEU - EG.USE.ELEC.KH.PC: 'ClimateAPIHandler' object has no attribute 'get_world_bank_data'",
+        "Error with JPN - EN.ATM.CO2E.PC: 'ClimateAPIHandler' object has no attribute 'get_world_bank_data'",
+        "Error with JPN - EG.USE.ELEC.KH.PC: 'ClimateAPIHandler' object has no attribute 'get_world_bank_data'"
+      ]
+    },
+    "UN SDG": {
+      "status": "error",
+      "response_time": 0.0,
+      "data_quality": "Unknown",
+      "reliability": "High",
+      "transparency": "High",
+      "details": {
+        "endpoints_tested": 1,
+        "successful_requests": 0,
+        "success_rate": "0.0%",
+        "sample_data": null
+      },
+      "issues": [
+        "UN SDG API error: 'ClimateAPIHandler' object has no attribute 'get_un_sdg_data'"
+      ]
+    },
+    "IBM Watson": {
+      "status": "error",
+      "response_time": 0.24,
+      "data_quality": "unknown",
+      "reliability": "unknown",
+      "transparency": "unknown",
+      "details": {},
+      "issues": [
+        "Using fallback mode - IBM credentials may be invalid",
+        "Watson initialization error: 'WatsonXClient' object has no attribute 'get_climate_advice'"
+      ]
+    }
+  },
+  "data_quality": {},
+  "reliability_scores": {},
+  "transparency_report": {
+    "data_sources": {
+      "OpenWeather": {
+        "type": "Real-time weather data",
+        "update_frequency": "Every 10 minutes",
+        "coverage": "Global",
+        "reliability": "High - Commercial weather service",
+        "limitations": "Point-in-time data, weather forecast accuracy decreases over time"
+      },
+      "Carbon Interface": {
+        "type": "Carbon footprint calculations",
+        "methodology": "EPA emission factors and industry standards",
+        "coverage": "Global with regional factors",
+        "reliability": "High - Standardized calculation methods",
+        "limitations": "Estimates based on averages, actual emissions may vary"
+      },
+      "NASA POWER": {
+        "type": "Solar and meteorological data",
+        "methodology": "Satellite observations and modeling",
+        "coverage": "Global",
+        "reliability": "Very High - NASA scientific data",
+        "limitations": "Modeled data, may not reflect micro-climate conditions"
+      },
+      "Climate TRACE": {
+        "type": "Greenhouse gas emissions tracking",
+        "methodology": "Satellite data, AI analysis, ground truth",
+        "coverage": "Global facilities and countries",
+        "reliability": "Medium-High - New initiative, improving",
+        "limitations": "Beta API, some data gaps, methodology evolving"
+      },
+      "World Bank": {
+        "type": "Economic and environmental indicators",
+        "methodology": "Country reporting and statistical modeling",
+        "coverage": "Global country-level data",
+        "reliability": "High - International organization standards",
+        "limitations": "Annual data, reporting delays, country data quality varies"
+      },
+      "UN SDG": {
+        "type": "Sustainable Development Goals indicators",
+        "methodology": "Country reporting and UN monitoring",
+        "coverage": "Global country-level progress",
+        "reliability": "High - UN official data",
+        "limitations": "Reporting frequency varies, data availability gaps"
+      },
+      "IBM Watson": {
+        "type": "AI-generated climate insights",
+        "methodology": "Large language model trained on diverse data",
+        "coverage": "General climate knowledge",
+        "reliability": "Medium - AI-generated content",
+        "limitations": "May generate plausible but incorrect information, requires verification"
+      }
+    },
+    "fallback_systems": {
+      "description": "When APIs are unavailable, the system uses pre-calculated estimates",
+      "data_sources": "IPCC reports, EPA data, scientific literature",
+      "transparency": "Clearly marked as estimates when fallback is used",
+      "limitations": "Static data, may not reflect current conditions"
+    },
+    "data_validation": {
+      "range_checks": "Automatic validation of data ranges (e.g., temperature, emissions)",
+      "consistency_checks": "Cross-validation between different data sources",
+      "quality_indicators": "Data quality scores based on source reliability and validation",
+      "error_handling": "Graceful degradation with clear error messages"
+    }
+  },
+  "recommendations": [
+    {
+      "priority": "High",
+      "category": "API Reliability",
+      "issue": "Only 3/7 APIs are working",
+      "recommendation": "Implement robust fallback systems and API health monitoring"
+    },
+    {
+      "priority": "Medium",
+      "category": "Data Quality",
+      "issue": "Carbon Interface has data quality issues",
+      "recommendation": "Implement data validation and cleaning for Carbon Interface"
+    },
+    {
+      "priority": "Medium",
+      "category": "Data Quality",
+      "issue": "NASA POWER has data quality issues",
+      "recommendation": "Implement data validation and cleaning for NASA POWER"
+    },
+    {
+      "priority": "Medium",
+      "category": "Data Quality",
+      "issue": "World Bank has data quality issues",
+      "recommendation": "Implement data validation and cleaning for World Bank"
+    },
+    {
+      "priority": "Medium",
+      "category": "Data Quality",
+      "issue": "UN SDG has data quality issues",
+      "recommendation": "Implement data validation and cleaning for UN SDG"
+    },
+    {
+      "priority": "Medium",
+      "category": "Data Quality",
+      "issue": "IBM Watson has data quality issues",
+      "recommendation": "Implement data validation and cleaning for IBM Watson"
+    },
+    {
+      "priority": "High",
+      "category": "IBM Integration",
+      "issue": "IBM Watson not working properly",
+      "recommendation": "Verify IBM credentials and network connectivity, improve fallback system"
+    },
+    {
+      "priority": "Medium",
+      "category": "User Experience",
+      "issue": "Long response times for some APIs",
+      "recommendation": "Implement caching and background data updates"
+    },
+    {
+      "priority": "Medium",
+      "category": "Transparency",
+      "issue": "Users may not understand data sources",
+      "recommendation": "Add data source indicators and quality scores to UI"
+    },
+    {
+      "priority": "Low",
+      "category": "Monitoring",
+      "issue": "No real-time API health monitoring",
+      "recommendation": "Implement dashboard for API status and data quality metrics"
+    }
+  ]
+}

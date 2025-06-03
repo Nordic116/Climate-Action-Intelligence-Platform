@@ -458,3 +458,24 @@ Response:"""
             "complementary_actions": ["Energy audit", "Smart thermostat"],
             "raw_analysis": response
         }
+    
+    def get_climate_advice(self, query: str, context: str = "") -> str:
+        """Get climate advice for a general query"""
+        prompt = f"""
+        As a climate expert, provide helpful advice for the following question:
+        
+        Question: {query}
+        
+        Context: {context}
+        
+        Please provide:
+        1. Clear, actionable advice
+        2. Scientific backing where relevant
+        3. Practical implementation steps
+        4. Potential impact or benefits
+        5. Any important considerations or limitations
+        
+        Keep the response informative but accessible to a general audience.
+        """
+        
+        return self.generate_response(prompt, context)
